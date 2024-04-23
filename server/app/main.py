@@ -25,7 +25,7 @@ app.add_middleware(
 # Create initialized database table
 # @app.on_event("startup")
 # async def startup():
-#     Base.metadata.create_all(bind=engine) 
+#     Base.metadata.create_all(bind=engine)  
 
 # @AuthJWT.load_config
 # def get_config():
