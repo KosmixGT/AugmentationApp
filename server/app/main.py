@@ -6,10 +6,12 @@ from fastapi.middleware.cors import CORSMiddleware
 # from user.authorization import router as authorization_router
 # from fastapi_jwt_auth import AuthJWT
 # from user.schemas import Settings
+from imageprocessing import router as image_router
 
 app = FastAPI(title="Приложение аугментации")
 # Base.metadata.create_all(bind=engine)
 
+app.include_router(image_router)
 # app.include_router(user_router)
 # app.include_router(authorization_router)
 
