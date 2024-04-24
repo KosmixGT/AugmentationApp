@@ -1,3 +1,4 @@
+import os
 from fastapi import APIRouter, HTTPException, File, UploadFile
 from pydantic import BaseModel
 from typing import List
@@ -15,4 +16,18 @@ async def upload_images(files: List[UploadFile] = File(...)):
         content = await file.read()
         encoded_image = base64.b64encode(content).decode('utf-8')
         images.append(Image(image_base64=encoded_image))
+
+        # Путь к директории
+        directory = 'loadedImages/'
+
+        # Проверка на существование директории
+        if not os.path.exists(directory):
+            os.makedirs(directory)
+
+        # Сохранение изображения в файловой системе
+        with open(os.path.join(directory, file.filename), 'wb') as f:
+            f.write(content)
+
     return images
+
+

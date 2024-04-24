@@ -8,7 +8,9 @@
         </p>
       </v-col>
       <v-col cols="12">
-        <p>Загружено изображений: {{ images.length }}</p>
+        <p>
+          Загружено изображений: {{ images.length }}
+        </p>
       </v-col>
     </v-row>
     <v-row>
@@ -33,11 +35,19 @@
         </v-btn>
       </v-col>
     </v-row>
+    <v-row v-if="images.length > 0">
+      <v-col cols="12">
+        <p>
+          Отправьте загруженные изображения для аугментации
+        </p>
+      </v-col>
+      <v-btn color="primary" @click="uploadImages">Отправить изображения</v-btn>
+    </v-row>
   </v-container>
 </template>
 
 <script>
-import JSZip from 'jszip'
+import JSZip from 'jszip';
 
 export default {
   data() {
@@ -50,15 +60,15 @@ export default {
   computed: {
     displayedImages() {
       if (this.showAll) {
-        return this.images.slice(0, 20)
+        return this.images.slice(0, 20);
       } else {
-        return this.images.slice(0, 3)
+        return this.images.slice(0, 3);
       }
     }
   },
   methods: {
     toggleImages() {
-      this.showAll = !this.showAll
+      this.showAll = !this.showAll;
     },
     handleFileInputChange(event) {
       this.files = event.target.files
@@ -69,10 +79,7 @@ export default {
         reader.onload = (e) => {
           if (file.type === 'image/jpeg' || file.type === 'image/png') {
             this.images.push({ url: e.target.result })
-          } else if (
-            file.type === 'application/zip' ||
-            file.type === 'application/x-zip-compressed'
-          ) {
+          } else if (file.type === 'application/zip' || file.type === 'application/x-zip-compressed') {
             this.extractImagesFromZip(file)
           }
         }
