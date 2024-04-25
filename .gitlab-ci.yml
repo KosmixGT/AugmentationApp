@@ -1,0 +1,37 @@
+stages:
+  - build
+  - test
+  - deploy
+
+workflow:
+  rules:
+    - if: $CI_COMMIT_BRANCH == 'main'
+
+variables:
+  DEPLOY_ENV: "production"
+
+build-job:
+  stage: build
+  script:
+      - docker build -t gardunov/mycont:v1 .
+      - docker login -u gardunov -p $DOCKER_HUB_PASSWORD
+      - docker push gardunov/mycont:v1
+
+  tags:
+    - build
+
+unit-test-job:
+  stage: test
+  script:
+    - echo "Running unit tests."
+    - sleep 5
+    - echo "Unit tests complete."
+  tags:
+    - test
+
+deploy-job:
+  stage: deploy
+  script:
+    - docker compose up -d
+  tags:
+    - deploy
