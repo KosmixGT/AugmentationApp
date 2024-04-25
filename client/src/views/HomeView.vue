@@ -15,6 +15,9 @@
 
     <h2 class="centered" style="margin-top: 10%;">Как выглядит аугментация</h2>
     <img class="centered" style="width: 100%;" src="../assets/HomeAug1.jpg">
+
+    <p><RouterLink to="/login">Вход</RouterLink></p>
+    <p><RouterLink to="/register">Регистрация</RouterLink></p>
   </v-container>
 </template>
 
