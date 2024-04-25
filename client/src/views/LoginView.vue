@@ -21,9 +21,30 @@
 
     export default {
         methods: {
-            loginClick() {
-                alert('Привет, ' + this.login + '!');
-                
+            async getUser(user_login) {
+                try {
+                    const response = await this.$axios.get("/users/" + user_login)
+                    // Обработка успешной загрузки
+                    console.log('Пользователь найден:', response.data)
+                    return response.data.password
+                } catch (error) {
+                    console.error('Пользователь не обнаружен:', error)
+                    return -1
+                }
+            },
+            async loginClick() {
+                var passwd = await this.getUser(this.login)
+                if (passwd == -1) {
+                    alert("Пользователь не найден");
+                }
+                else if (passwd == this.password)
+                {
+                    this.$router.push({name:"image-upload",params:{login:this.login}})
+                }
+                else
+                {
+                    alert("Неверный пароль");
+                }
             }
         },
         data () {
