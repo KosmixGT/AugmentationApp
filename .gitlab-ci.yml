@@ -24,7 +24,7 @@ unit-test-job:
   stage: test
   script:
     - echo "Running unit tests."
-    - sleep 50
+    - sleep 5
     - echo "Unit tests complete."
   tags:
     - test
@@ -32,7 +32,6 @@ unit-test-job:
 deploy-job:
   stage: deploy
   script:
-    - echo "Deploying application to $DEPLOY_ENV... "
-    - echo "Application successfully deployed."
+    - docker compose up -d
   tags:
     - deploy
