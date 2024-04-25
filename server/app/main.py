@@ -1,6 +1,8 @@
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
+import uvicorn
 
+from prometheus_fastapi_instrumentator import Instrumentator
 # from database import Base, engine
 # from user.routes import router as user_router
 # from user.authorization import router as authorization_router
@@ -10,6 +12,8 @@ from imageprocessing import router as image_router
 
 app = FastAPI(title="Приложение аугментации")
 # Base.metadata.create_all(bind=engine)
+
+Instrumentator().instrument(app).expose(app)
 
 app.include_router(image_router)
 # app.include_router(user_router)
@@ -31,7 +35,7 @@ app.add_middleware(
 
 # @AuthJWT.load_config
 # def get_config():
-#     return Settings() 
+#     return Settings()
 
 @app.get('/', tags=["root"])
 async def root():
