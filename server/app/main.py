@@ -5,9 +5,6 @@ import uvicorn
 from prometheus_fastapi_instrumentator import Instrumentator
 from database import Base, engine
 from user.routes import router as user_router
-# from user.authorization import router as authorization_router
-# from fastapi_jwt_auth import AuthJWT
-# from user.schemas import Settings
 from imageprocessing import router as image_router
 from augmenation import router as augmenation_router
 
@@ -18,8 +15,7 @@ Instrumentator().instrument(app).expose(app)
 
 app.include_router(image_router)
 app.include_router(augmenation_router)
-# app.include_router(user_router)
-# app.include_router(authorization_router)
+app.include_router(user_router)
 
 app.add_middleware(
     CORSMiddleware,
