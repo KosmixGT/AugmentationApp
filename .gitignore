@@ -1,6 +1,7 @@
 # Byte-compiled / optimized / DLL files
 server/__pycache__/
 server/app/loadedImages/
+server/app/outImages/
 server/myenv/
 *.py[cod]
 *$py.class
