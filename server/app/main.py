@@ -3,20 +3,20 @@ from fastapi.middleware.cors import CORSMiddleware
 import uvicorn
 
 from prometheus_fastapi_instrumentator import Instrumentator
-# from database import Base, engine
-# from user.routes import router as user_router
+from database import Base, engine
+from user.routes import router as user_router
 # from user.authorization import router as authorization_router
 # from fastapi_jwt_auth import AuthJWT
 # from user.schemas import Settings
 from imageprocessing import router as image_router
 
 app = FastAPI(title="Приложение аугментации")
-# Base.metadata.create_all(bind=engine)
+Base.metadata.create_all(bind=engine)
 
 Instrumentator().instrument(app).expose(app)
 
 app.include_router(image_router)
-# app.include_router(user_router)
+app.include_router(user_router)
 # app.include_router(authorization_router)
 
 app.add_middleware(
@@ -29,13 +29,9 @@ app.add_middleware(
 )
 
 # Create initialized database table
-# @app.on_event("startup")
-# async def startup():
-#     Base.metadata.create_all(bind=engine)  
-
-# @AuthJWT.load_config
-# def get_config():
-#     return Settings()
+@app.on_event("startup")
+async def startup():
+    Base.metadata.create_all(bind=engine)  
 
 @app.get('/', tags=["root"])
 async def root():
