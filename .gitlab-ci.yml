@@ -10,6 +10,7 @@ build-job:
   stage: build
   script:
     - echo "Compiling the code..."
+    - sleep 100
     - echo "Compile complete."
   tags:
     - build
@@ -18,6 +19,7 @@ unit-test-job:
   stage: test
   script:
     - echo "Running unit tests."
+    - sleep 50
     - echo "Unit tests complete."
   tags:
     - test
