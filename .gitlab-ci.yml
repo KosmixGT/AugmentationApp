@@ -1,0 +1,31 @@
+stages:
+  - build
+  - test
+  - deploy
+
+variables:
+  DEPLOY_ENV: "production"
+
+build-job:
+  stage: build
+  script:
+    - echo "Compiling the code..."
+    - echo "Compile complete."
+  tags:
+    - build
+
+unit-test-job:
+  stage: test
+  script:
+    - echo "Running unit tests."
+    - echo "Unit tests complete."
+  tags:
+    - test
+
+deploy-job:
+  stage: deploy
+  script:
+    - echo "Deploying application to $DEPLOY_ENV... "
+    - echo "Application successfully deployed."
+  tags:
+    - deploy
