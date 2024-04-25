@@ -3,24 +3,19 @@ version: '3.4'
 services:
 
   backend:
-    build: ./server
+    image: imagename
     ports:
-      - 5000:5000
-    volumes:
-      - ./server/app:/app
+      - 7505:5000
     command: uvicorn main:app --reload --host 0.0.0.0 --port 5000
     depends_on:
       - database
 
   frontend:
-    build: ./client
-    environment:
-      - VUE_APP_BACKEND_URL=http://localhost:5000
-    volumes:
-      - './client:/app'
-      - '/app/node_modules'
+    image: imagename
+    #environment:
+    #  - VUE_APP_BACKEND_URL=http://localhost:7505
     ports:
-      - 5173:5173
+      - 7506:5173
 
   database:
     image: postgres:latest
@@ -36,7 +31,7 @@ services:
     image: prom/prometheus
     container_name: prometheus
     ports:
-      - 9090:9090
+      - 7508:9090
     volumes:
       - ./prometheus_data/prometheus.yml:/etc/prometheus/prometheus.yml
     command:
@@ -46,7 +41,7 @@ services:
     image: grafana/grafana
     container_name: grafana
     ports:
-      - 3000:3000
+      - 7507:3000
     volumes:
       - grafana_data:/var/lib/grafana
 
