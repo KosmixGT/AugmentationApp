@@ -135,6 +135,9 @@ export default {
       brightness: 0
     }
   },
+  async created() {
+    console.log(this.$route.params.login)
+  },
   computed: {
     displayedImages() {
       if (this.showAll) {
