@@ -20,7 +20,9 @@ async def get_user_by_login(user_login: str, db: Session = Depends(get_db)):
 #CREATE A USER
 @router.post("/register/", response_model=UserSchema)
 async def add_user(user: CreateUserSchema, db: Session = Depends(get_db)):
-    # checking if username already exists 
+    # checking if username already exists
+    print("checking")
+    print(user)
     user_exists = crud.get_user_by_login(db=db, login=user.login)
     if user_exists:
         raise HTTPException(status_code=status.HTTP_409_CONFLICT, 

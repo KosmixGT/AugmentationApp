@@ -11,10 +11,13 @@ class UserSchema(BaseModel):
 
     class Config:
         orm_mode = True
+        from_attributes = True
+
 
 class CreateUserSchema(BaseModel):
     login: str
     password: str
 
     class Config:
+        orm_mode = True
         from_attributes = True

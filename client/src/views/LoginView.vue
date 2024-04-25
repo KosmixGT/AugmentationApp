@@ -17,8 +17,6 @@
 </template>
 
 <script>
-    import { ref } from 'vue'
-
     export default {
         methods: {
             async getUser(user_login) {
@@ -63,5 +61,3 @@
     align-items: center;
 }
 </style>
-  
-  
