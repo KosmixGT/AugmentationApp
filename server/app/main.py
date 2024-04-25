@@ -9,6 +9,7 @@ from user.routes import router as user_router
 # from fastapi_jwt_auth import AuthJWT
 # from user.schemas import Settings
 from imageprocessing import router as image_router
+from augmenation import router as augmenation_router
 
 app = FastAPI(title="Приложение аугментации")
 Base.metadata.create_all(bind=engine)
@@ -16,7 +17,8 @@ Base.metadata.create_all(bind=engine)
 Instrumentator().instrument(app).expose(app)
 
 app.include_router(image_router)
-app.include_router(user_router)
+app.include_router(augmenation_router)
+# app.include_router(user_router)
 # app.include_router(authorization_router)
 
 app.add_middleware(
