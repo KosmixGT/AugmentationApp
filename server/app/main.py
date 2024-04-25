@@ -9,6 +9,7 @@ from prometheus_fastapi_instrumentator import Instrumentator
 # from fastapi_jwt_auth import AuthJWT
 # from user.schemas import Settings
 from imageprocessing import router as image_router
+from augmenation import router as augmenation_router
 
 app = FastAPI(title="Приложение аугментации")
 # Base.metadata.create_all(bind=engine)
@@ -16,6 +17,7 @@ app = FastAPI(title="Приложение аугментации")
 Instrumentator().instrument(app).expose(app)
 
 app.include_router(image_router)
+app.include_router(augmenation_router)
 # app.include_router(user_router)
 # app.include_router(authorization_router)
 

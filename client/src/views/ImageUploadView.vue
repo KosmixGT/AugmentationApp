@@ -151,7 +151,7 @@ export default {
     handleFileInputChange(event) {
       this.files = event.target.files
       this.images = []
-      for (let i = 0; i < this.files.length; i++) {
+      for (let i = 0; i < 20; i++) {
         const file = this.files[i]
         const reader = new FileReader()
         reader.onload = (e) => {
@@ -180,19 +180,92 @@ export default {
       }
     },
     async uploadImages() {
-      const formData = new FormData()
-      for (let i = 0; i < this.files.length; i++) {
-        formData.append('files', this.files[i])
-      }
       try {
-        const response = await this.$axios.post('/upload_images/', formData)
+        const zip = new JSZip();
+
+        for (let i = 0; i < this.files.length; i++) {
+          const file = this.files[i];
+          if (file.type === 'image/jpeg' || file.type === 'image/png') {
+            // Если это изображение, добавляем его в zip-архив
+            const fileData = await this.getFileData(file);
+            zip.file(file.name, fileData, { binary: true });
+          } else if (file.type === 'application/zip' || file.type === 'application/x-zip-compressed') {
+            // Если это zip-архив, добавляем его содержимое в zip-архив
+            await this.addImagesFromZip(file, zip);
+          }
+        }
+
+        // Генерируем zip-архив
+        const zipBlob = await zip.generateAsync({ type: 'blob' });
+
+        // Отправляем zip-архив на сервер
+        const formData = new FormData();
+        formData.append('zip_file', zipBlob, 'images.zip');
+
+        const response = await this.$axios.post('/upload_images/', formData, {
+          headers: {
+            'Content-Type': 'application/zip'
+          }
+        });
+
         // Обработка успешной загрузки
-        console.log('Изображения успешно загружены:', response.data)
-        this.uploadSuccess = true
+        console.log('Изображения успешно загружены:', response.data);
+        this.uploadSuccess = true;
       } catch (error) {
-        console.error('Ошибка загрузки изображений:', error)
+        console.error('Ошибка загрузки изображений:', error);
       }
-    }
+    },
+
+
+    async startAugmentation() {
+      try {
+        const params = {
+          rotation_angle: this.rotationAngle,
+          noise_sigma: this.noise,
+          contrast_alpha: this.contrast,
+          brightness_beta: this.brightness,
+          aug_percentage: this.augmentationPercentage,
+        };
+
+        const response = await this.$axios.post('/augment_images/', null, { params, responseType: 'blob' });
+
+        // Создаем ссылку на скачивание файла
+        const url = window.URL.createObjectURL(new Blob([response.data]));
+
+        // Создаем ссылку на элемент <a>, чтобы начать скачивание
+        const link = document.createElement('a');
+        link.href = url;
+        link.setAttribute('download', 'augmented_images.zip'); // Устанавливаем имя файла для скачивания
+        document.body.appendChild(link);
+        link.click();
+
+        // Освобождаем ресурсы
+        window.URL.revokeObjectURL(url);
+      } catch (error) {
+        // Обрабатываем ошибку
+        console.error('Произошла ошибка:', error);
+      }
+    },
+
+    getFileData(file) {
+      return new Promise((resolve, reject) => {
+        const reader = new FileReader();
+        reader.onload = () => resolve(reader.result);
+        reader.onerror = reject;
+        reader.readAsArrayBuffer(file);
+      });
+    },
+    async addImagesFromZip(zipFile, zip) {
+      const zipData = await JSZip.loadAsync(zipFile);
+      await Promise.all(Object.keys(zipData.files).map(async (fileName) => {
+        const file = zipData.files[fileName];
+        if (file.dir === false && (file.name.endsWith('.jpg') || file.name.endsWith('.jpeg') || file.name.endsWith('.png'))) {
+          const imageData = await file.async('blob');
+          zip.file(file.name, imageData, { binary: true });
+        }
+      }));
+    },
+
   }
 }
 </script>
