@@ -3,24 +3,58 @@ version: '3.4'
 services:
 
   backend:
-    build: ./server
-    environment:
-        - SECRET_KEY=mysecretkey
-        - ALGORITHM=HS256
-        - ACCESS_TOKEN_EXPIRES_MINUTES=60
-        - DATABASE_URL=
+    image: gardunov/backend:v1
     ports:
-      - 5000:5000
-    volumes:
-      - ./server/app:/app
+      - 7505:5000
     command: uvicorn main:app --reload --host 0.0.0.0 --port 5000
+    depends_on:
+      - database
 
   frontend:
-    build: ./client
-    environment:
-    - VUE_APP_BACKEND_URL=http://localhost:5000
-    volumes:
-      - './client:/app'
-      - '/app/node_modules'
+    image: gardunov/client:v1
+    #environment:
+    #  - VUE_APP_BACKEND_URL=http://localhost:7505
     ports:
-      - 8080:8080
+      - 7506:5173
+
+  database:
+    image: postgres:latest
+    container_name: postgesql
+    environment:
+      - 'POSTGRES_PASSWORD=myps'
+    volumes:
+      - '/prog/devops_aug/db/volumes:/var/lib/postgresql/data'
+    ports:
+      - 7504:5432
+
+  prometheus:
+    image: prom/prometheus
+    container_name: prometheus
+    ports:
+      - 7508:9090
+    volumes:
+      - ./prometheus_data/prometheus.yml:/etc/prometheus/prometheus.yml
+    command:
+      - '--config.file=/etc/prometheus/prometheus.yml'
+
+  grafana:
+    image: grafana/grafana
+    container_name: grafana
+    ports:
+      - 7507:3000
+    volumes:
+      - grafana_data:/var/lib/grafana
+
+volumes:
+  prometheus_data:
+    driver: local
+    driver_opts:
+      o: bind
+      type: none
+      device: ./prometheus_data
+  grafana_data:
+    driver: local
+    driver_opts:
+      o: bind
+      type: none
+      device: ./grafana_data
