@@ -15,8 +15,8 @@ const router = createRouter({
     // },
     {
       path: '/',
-      name: 'image-upload',
-      component: ImageUploadView
+      name: 'home',
+      component: HomeView
     },
     {
       path: '/upload/:login',
