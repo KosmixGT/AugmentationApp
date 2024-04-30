@@ -61,7 +61,7 @@ export default {
       }
 
       try {
-        const response = await this.$axios.post('/users/register/', null, { formData })
+        const response = await this.$axios.post('/users/register/',formData)
         // Обработка успешной загрузки
         console.log('Пользователь добавлен')
         return true
