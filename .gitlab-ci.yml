@@ -6,6 +6,7 @@ stages:
 workflow:
   rules:
     - if: $CI_COMMIT_BRANCH == 'main'
+      when: always
 
 variables:
   DEPLOY_ENV: "production"
@@ -13,9 +14,13 @@ variables:
 build-job:
   stage: build
   script:
-      - docker build -t gardunov/mycont:v1 .
       - docker login -u gardunov -p $DOCKER_HUB_PASSWORD
-      - docker push gardunov/mycont:v1
+      - cd server
+      - docker build -t gardunov/backend:v1 .
+      - docker push gardunov/backend:v1
+      - cd ../client
+      - docker build -t gardunov/client:v1 .
+      - docker push gardunov/client:v1
 
   tags:
     - build
@@ -32,6 +37,8 @@ unit-test-job:
 deploy-job:
   stage: deploy
   script:
+  #  - docker compose restart
     - docker compose up -d
+    - docker compose logs
   tags:
     - deploy
