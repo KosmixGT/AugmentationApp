@@ -6,7 +6,7 @@ services:
     image: gardunov/backend:v1
     ports:
       - 7505:5000
-    command: uvicorn app.main:app --reload --host 0.0.0.0 --port 5000
+    command: 5000
     depends_on:
       - database
 
@@ -15,7 +15,7 @@ services:
     #environment:
     #  - VUE_APP_BACKEND_URL=http://localhost:7505
     ports:
-      - 7506:5173
+      - 7506:80
 
   database:
     image: postgres:latest
