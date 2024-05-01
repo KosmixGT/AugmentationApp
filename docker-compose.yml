@@ -43,7 +43,7 @@ services:
     #environment:
     #- GF_PATHS_DATA=/var/lib/grafana
     volumes:
-      - grafana_data:/var/lib/grafana
+      - /prog/devops_aug/grafana/volume:/var/lib/grafana
 
 volumes:
   prometheus_data:
@@ -57,4 +57,4 @@ volumes:
     driver_opts:
       o: bind
       type: none
-      device: ./grafana_data
+      device: /prog/devops_aug/grafana/volume
