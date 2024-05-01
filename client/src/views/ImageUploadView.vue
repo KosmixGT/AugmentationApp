@@ -16,18 +16,13 @@
         </v-row>
         <v-row>
           <v-col cols="12">
-            <v-file-input
-              color="primary"
-              label="Выберите изображения или zip архив"
-              multiple
-              accept="image/*,.zip"
-              @change="handleFileInputChange"
-            ></v-file-input>
+            <v-file-input color="primary" label="Выберите изображения или zip архив" multiple accept="image/*,.zip"
+              @change="handleFileInputChange"></v-file-input>
           </v-col>
         </v-row>
         <v-row v-if="images.length > 0">
           <v-col v-for="(image, index) in displayedImages" :key="index" cols="12" sm="6" md="4">
-            <v-img :src="image.url" contain></v-img>
+            <v-img :src="image.url" style="transform: scale(0.7);" contain></v-img>
           </v-col>
         </v-row>
         <v-row v-if="images.length > 3">
@@ -42,7 +37,7 @@
           <v-col cols="12">
             <p>Отправьте загруженные изображения для аугментации</p>
           </v-col>
-          <v-btn color="primary" @click="uploadImages">
+          <v-btn v-if="!uploadSuccess" color="primary" @click="uploadImages">
             <v-icon left>mdi-upload</v-icon>
             Отправить изображения
           </v-btn>
@@ -59,13 +54,8 @@
           <v-col cols="12">
             <v-row>
               <v-col cols="8">
-                <v-slider
-                  label="Процент аугментации"
-                  v-model.number="augmentationPercentage"
-                  min="5"
-                  max="50"
-                  step="1"
-                ></v-slider>
+                <v-slider label="Процент аугментации" v-model.number="augmentationPercentage" min="5" max="50"
+                  step="1"></v-slider>
               </v-col>
               <v-col cols="4">
                 <v-text-field v-model.number="augmentationPercentage" readonly></v-text-field>
@@ -74,13 +64,7 @@
 
             <v-row>
               <v-col cols="8">
-                <v-slider
-                  label="Угол поворота"
-                  v-model.number="rotationAngle"
-                  min="0"
-                  max="45"
-                  step="1"
-                ></v-slider>
+                <v-slider label="Угол поворота" v-model.number="rotationAngle" min="0" max="45" step="1"></v-slider>
               </v-col>
               <v-col cols="4">
                 <v-text-field v-model.number="rotationAngle" readonly></v-text-field>
@@ -98,13 +82,7 @@
 
             <v-row>
               <v-col cols="8">
-                <v-slider
-                  label="Контраст"
-                  v-model.number="contrast"
-                  min="0.5"
-                  max="1.5"
-                  step="0.1"
-                ></v-slider>
+                <v-slider label="Контраст" v-model.number="contrast" min="0.5" max="1.5" step="0.1"></v-slider>
               </v-col>
               <v-col cols="4">
                 <v-text-field v-model.number="contrast" readonly></v-text-field>
@@ -113,13 +91,7 @@
 
             <v-row>
               <v-col cols="8">
-                <v-slider
-                  label="Яркость"
-                  v-model.number="brightness"
-                  min="-255"
-                  max="255"
-                  step="1"
-                ></v-slider>
+                <v-slider label="Яркость" v-model.number="brightness" min="-255" max="255" step="1"></v-slider>
               </v-col>
               <v-col cols="4">
                 <v-text-field v-model.number="brightness" readonly></v-text-field>
@@ -132,6 +104,20 @@
             Начать аугментацию
           </v-btn>
         </v-row>
+        <!-- Индикатор загрузки -->
+        <v-dialog v-model="loading" persistent max-width="300">
+          <v-card color="primary" flat>
+            <v-card-text class="text-center">
+              <div>Ожидайте...</div>
+              <v-progress-circular
+                :size="60"
+                :width="7"
+                indeterminate
+                color="white" 
+              ></v-progress-circular>
+            </v-card-text>
+          </v-card>
+        </v-dialog>
       </v-card-text>
     </v-card>
   </v-container>
@@ -151,7 +137,8 @@ export default {
       rotationAngle: 0,
       noise: 0,
       contrast: 1,
-      brightness: 0
+      brightness: 0,
+      loading: false
     }
   },
   async created() {
@@ -206,6 +193,7 @@ export default {
     },
     async uploadImages() {
       try {
+        this.loading = true;
         const zip = new JSZip()
 
         for (let i = 0; i < this.files.length; i++) {
@@ -239,13 +227,16 @@ export default {
         // Обработка успешной загрузки
         console.log('Изображения успешно загружены:', response.data)
         this.uploadSuccess = true
+        this.loading = false;
       } catch (error) {
         console.error('Ошибка загрузки изображений:', error)
+        this.loading = false;
       }
     },
 
     async startAugmentation() {
       try {
+        this.loading = true;
         const params = {
           rotation_angle: this.rotationAngle,
           noise_sigma: this.noise,
@@ -271,9 +262,11 @@ export default {
 
         // Освобождаем ресурсы
         window.URL.revokeObjectURL(url)
+        this.loading = false;
       } catch (error) {
         // Обрабатываем ошибку
         console.error('Произошла ошибка:', error)
+        this.loading = false;
       }
     },
 
@@ -305,3 +298,27 @@ export default {
   }
 }
 </script>
+
+<style scoped>
+.v-dialog {
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* добавьте тень */
+  border-radius: 8px; /* закругленные углы */
+}
+
+.v-dialog {
+  animation: pulse 1s infinite alternate; /* добавьте анимацию */
+}
+.v-card-text {
+  overflow-y: hidden !important;
+}
+
+
+@keyframes pulse {
+  from {
+    transform: scale(1);
+  }
+  to {
+    transform: scale(1.1);
+  }
+}
+</style>

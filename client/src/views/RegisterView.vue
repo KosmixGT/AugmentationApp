@@ -1,40 +1,18 @@
 <template>
   <v-container>
-    <div class="centered" style="margin-top: 15%">
-      <div style="font-size: 24px">
-        <h2 style="margin-bottom: 15px">Регистрация</h2>
-        <strong><p>Логин:</p></strong>
-        <input
-          style="margin-top: 5px; border: 1px solid; text-indent: 7px"
-          v-model="login"
-          placeholder="Введите логин"
-        />
-        <p style="margin-top: 10px"></p>
-        <strong><p>Пароль:</p></strong>
-        <input
-          type="password"
-          style="margin-top: 5px; border: 1px solid; text-indent: 7px"
-          v-model="password"
-          placeholder="Введите пароль"
-        />
-        <p style="margin-top: 10px"></p>
-        <strong><p>Повторите пароль:</p></strong>
-        <input
-          type="password"
-          style="margin-top: 5px; border: 1px solid; text-indent: 7px"
-          v-model="repeatPassword"
-          placeholder="Повторите пароль"
-        />
-        <p style="margin-top: 15px"></p>
-        <button
-          v-on:click="addClick"
-          style="margin-top: 15px; border: 1px solid; background-color: aqua; width: 80%"
-        >
-          Регистрация
-        </button>
-        <br />
-      </div>
-    </div>
+    <v-row justify="center" class="mt-15">
+      <v-col cols="12" sm="8" md="6" lg="4">
+        <v-card class="pa-5">
+          <h2 class="text-center mb-4">Регистрация</h2>
+          <v-form>
+            <v-text-field v-model="login" label="Логин" outlined></v-text-field>
+            <v-text-field v-model="password" label="Пароль" type="password" outlined></v-text-field>
+            <v-text-field v-model="repeatPassword" label="Повторите пароль" type="password" outlined></v-text-field>
+            <v-btn @click="addClick" color="primary" class="mt-4" block>Регистрация</v-btn>
+          </v-form>
+        </v-card>
+      </v-col>
+    </v-row>
   </v-container>
 </template>
 
