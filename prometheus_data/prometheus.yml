@@ -1,4 +1,4 @@
-# config file for prometheus
+# config file for prometheus.
 
 # global config
 global:
