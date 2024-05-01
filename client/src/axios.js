@@ -1,6 +1,6 @@
 import axios from 'axios'
 
-const baseURL = 'backend:5000' // Замените на ваш URL сервера
+const baseURL = 'http://backend:7505' // Замените на ваш URL сервера
 
 const instance = axios.create({
   baseURL,
