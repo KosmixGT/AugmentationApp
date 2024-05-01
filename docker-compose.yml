@@ -6,7 +6,7 @@ services:
     image: gardunov/backend:v1
     ports:
       - 7505:5000
-    command: 5000
+    command: "5000"
     depends_on:
       - database
 
