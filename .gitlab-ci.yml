@@ -3,10 +3,10 @@ stages:
   - test
   - deploy
 
-workflow:
-  rules:
-    - if: $CI_COMMIT_BRANCH == 'main'
-      when: always
+#workflow:
+  #rules:
+    #- if: $CI_COMMIT_BRANCH == 'main'
+      #when: always
 
 variables:
   DEPLOY_ENV: "production"
