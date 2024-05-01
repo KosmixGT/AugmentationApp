@@ -55,4 +55,4 @@ volumes:
     driver_opts:
       o: bind
       type: none
-      device: ./grafana_data
+      device: /var/lib/grafana
