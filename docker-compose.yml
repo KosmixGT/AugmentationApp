@@ -41,7 +41,7 @@ services:
     ports:
       - 7507:3000
     environment:
-    - GF_PATHS_DATA=/var/lib/docker/volumes/augmentationapp_grafana_data/_data
+    - GF_PATHS_DATA=/var/lib/grafana
     volumes:
       - grafana_data:/var/lib/grafana
 
