@@ -12,8 +12,6 @@ services:
 
   frontend:
     image: gardunov/client:v1
-    #environment:
-    #  - VUE_APP_BACKEND_URL=http://localhost:7505
     ports:
       - 7506:80
 
