@@ -17,15 +17,15 @@ services:
     ports:
       - 7506:5173
 
-  # database:
-  #   image: postgres:latest
-  #   container_name: postgesql
-  #   environment:
-  #     - 'POSTGRES_PASSWORD=myps'
-  #   volumes:
-  #     - '/prog/devops_aug/db/volumes:/var/lib/postgresql/data'
-  #   ports:
-  #     - 7504:5432
+  database:
+    image: postgres:latest
+    container_name: postgesql
+    environment:
+      - 'POSTGRES_PASSWORD=myps'
+    volumes:
+      - '/prog/devops_aug/db/volumes:/var/lib/postgresql/data'
+    ports:
+      - 7504:5432
 
   prometheus:
     image: prom/prometheus
