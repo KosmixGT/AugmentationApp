@@ -1,22 +1,27 @@
-# Dockerfile for frontend service
+# Образ для Node.js с DockerHub
+FROM node:alpine3.18
 
-# Use the official Node.js image from Docker Hub
-FROM node:16
-
-# Set the working directory in the container
+# Создаём рабочую директорию
 WORKDIR /app
 
-RUN npm install @vue/cli@5.0.8 -g
+COPY vite-version.txt ./
 
-# Copy package.json and package-lock.json to the working directory
-COPY package*.json ./
+# Устанавливаем зависимости
+RUN npm install vite@$(cat vite-version.txt)
 
-# Install dependencies
-RUN npm install
+# Копируем список зависимостей в package.json и package-lock.json в рабочую директорию
+#COPY package*.json ./
+COPY package.json ./
 
-# Copy the rest of the application's code to the working directory
-COPY . .
+# Копируем сборку на сервер
+# Здесь вообще должна быть публикация на AWS хостинг
+COPY dist/. dist/
 
-# Command to run the application
-CMD ["npm", "run", "dev", "--", "--host", "0.0.0.0"]
+# Указываем, что сервер прослушивает порт 5000
+EXPOSE 5000
 
+# Задаём базовую команду
+ENTRYPOINT ["npm", "run", "preview"]
+
+# Передаём аргументы - порт сервера
+CMD ["5000"]
