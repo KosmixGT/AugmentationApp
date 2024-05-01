@@ -23,7 +23,6 @@ MAINTAINER "Augmentation team"
 # Здесь можно указать любую информацию, к примеру тип
 LABEL type="Frontend-vue-vite"
 
-
 # Копируем сборку с предыдущего этапа на сервер
 # Здесь вообще должна быть публикация на AWS хостинг
 COPY --from=build-dist /app/dist /usr/share/nginx/html/dist
