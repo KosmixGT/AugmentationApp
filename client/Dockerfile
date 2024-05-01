@@ -1,27 +1,35 @@
-# Образ для Node.js с DockerHub
-FROM node:alpine3.18
+# Облегчённый образ для Node.js с DockerHub
+# В этом образе мы собираем приложение в статичный сайт
+FROM node:alpine3.18 as build-dist
 
-# Создаём рабочую директорию
+# Задаём рабочую директорию
 WORKDIR /app
 
-COPY vite-version.txt ./
+# Копируем все файлы, в том числе package.json в рабочую директорию
+COPY . .
 
 # Устанавливаем зависимости
-RUN npm install vite@$(cat vite-version.txt)
+RUN npm install
 
-# Копируем список зависимостей в package.json и package-lock.json в рабочую директорию
-#COPY package*.json ./
-COPY package.json ./
+# Собираем приложение
+RUN npm run build
 
-# Копируем сборку на сервер
+# Образ для nginx с DockerHub
+FROM nginx:1.25.5-alpine-slim
+
+# Копируем сборку с предыдущего этапа на сервер
 # Здесь вообще должна быть публикация на AWS хостинг
-COPY dist/. dist/
+COPY --from=build-dist /app/dist /usr/share/nginx/html/dist
 
-# Указываем, что сервер прослушивает порт 5000
-EXPOSE 5000
+# Удаляем существующий конфиг сервера
+RUN rm /etc/nginx/conf.d/default.conf
 
-# Задаём базовую команду
-ENTRYPOINT ["npm", "run", "preview"]
+# Копируем свой конфиг на сервер
+COPY default.conf.template /etc/nginx/templates/
 
-# Передаём аргументы - порт сервера
-CMD ["5000"]
+# Указываем порт для сервера
+ENV NGINX_PORT=80
+
+# Указываем, что сервер прослушивает порт NGINX_PORT
+EXPOSE $NGINX_PORT
+
