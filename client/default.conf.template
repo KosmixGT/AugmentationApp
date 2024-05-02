@@ -2,10 +2,8 @@ server {
     listen   ${NGINX_PORT}; ## listen for ipv4;
     server_name localhost;
     
-    http {
-        resolver 127.0.0.11 ipv6=off;
-    }
-
+    resolver 127.0.0.11 ipv6=off;
+    
     #Установим root и точку входа, у нас index.html в папка dist
     root /usr/share/nginx/html/dist/; 
     index index.html;
