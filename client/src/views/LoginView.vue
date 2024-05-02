@@ -25,7 +25,7 @@ export default {
         console.log('Пользователь найден:', response.data)
         return response.data.password
       } catch (error) {
-        console.error('Пользователь не обнаружен:', error.response)
+        console.error('Пользователь не обнаружен:', error)
         return -1
       }
     },
