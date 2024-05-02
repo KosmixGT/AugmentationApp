@@ -24,8 +24,9 @@ export default {
         // Обработка успешной загрузки
         console.log('Пользователь найден:', response.data)
         return response.data.password
-      } catch(error => {
-          if (error.response) {
+      } catch(error)
+      {
+        if (error.response) {
           // The server responded with a status code outside the 2xx range
           console.log('Error response:', error.response);
         } else if (error.request) {
@@ -35,7 +36,7 @@ export default {
           // Something happened in setting up the request that triggered an error
           console.log('Error message:', error.message);
         }
-      });
+      };
       //catch (error) {
       //  console.error('Пользователь не обнаружен:', error)
       //  return -1
