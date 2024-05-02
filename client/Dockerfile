@@ -15,7 +15,8 @@ RUN npm install
 RUN npm run build
 
 # Образ для nginx с DockerHub
-FROM nginx:1.25.5-alpine-slim
+#FROM nginx:1.25.5-alpine-slim
+FROM nginx:latest
 
 # Заполнение поля автора
 MAINTAINER "Augmentation team"
