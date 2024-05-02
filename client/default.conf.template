@@ -14,12 +14,13 @@ server {
     }
 
     location / {
-            if (-f $request_filename) {
-                	expires max;
-                	break;
-            }
-            if ($request_filename !~ "\.(js|htc|ico|gif|jpg|png|css)$") {
-                	rewrite ^(.*) /index.html last;
-            }
+            #if (-f $request_filename) {
+            #    	expires max;
+            #    	break;
+            #}
+            #if ($request_filename !~ "\.(js|htc|ico|gif|jpg|png|css)$") {
+            #    	rewrite ^(.*) /index.html last;
+            #}
+            # это с другого сайта try_files $uri /index.html; # redirect all request to index.html
     }
 }
