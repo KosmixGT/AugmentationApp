@@ -4,8 +4,8 @@ services:
 
   backend:
     image: gardunov/backend:v1
-    ports:
-      - 7505:5000
+    #ports:
+    #  - 7505:5000
     command: "5000"
     depends_on:
       - database
@@ -14,6 +14,8 @@ services:
     image: gardunov/client:v1
     ports:
       - 7506:80
+    depends_on:
+      - backend
 
   database:
     image: postgres:latest
