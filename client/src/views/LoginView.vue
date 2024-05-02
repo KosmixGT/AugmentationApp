@@ -24,10 +24,22 @@ export default {
         // Обработка успешной загрузки
         console.log('Пользователь найден:', response.data)
         return response.data.password
-      } catch (error) {
-        console.error('Пользователь не обнаружен:', error)
-        return -1
-      }
+      } catch(error => {
+          if (error.response) {
+          // The server responded with a status code outside the 2xx range
+          console.log('Error response:', error.response);
+        } else if (error.request) {
+          // The request was made but no response was received
+          console.log('Error request:', error.request);
+        } else {
+          // Something happened in setting up the request that triggered an error
+          console.log('Error message:', error.message);
+        }
+      });
+      //catch (error) {
+      //  console.error('Пользователь не обнаружен:', error)
+      //  return -1
+      //}
     },
     async loginClick() {
       var passwd = await this.getUser(this.login)
