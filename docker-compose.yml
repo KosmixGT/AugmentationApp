@@ -37,6 +37,7 @@ services:
 
   grafana:
     image: grafana/grafana
+    user: "472:472"
     container_name: grafana
     ports:
       - 7507:3000
