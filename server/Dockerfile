@@ -2,7 +2,7 @@
 FROM python:3.12-slim
 
 # Заполнение поля автора
-MAINTAINER "Augmentation team"
+LABEL Author="Augmentation team"
 
 # Здесь можно указать любую информацию, к примеру тип
 LABEL type="Backend-fast-api"
@@ -22,6 +22,10 @@ RUN pip install -r ../requirements.txt
 
 # Копируем наше приложение в program/app
 COPY ./app .
+
+# Задаём строку подключения к БД из переменных GitLab
+ARG DB_CONNECTION
+ENV DB_CONNECTION=$DB_CONNECTION
 
 # Обозначаем для пользователя порт, который прослушивается приложением
 EXPOSE 5000

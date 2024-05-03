@@ -18,7 +18,7 @@ RUN npm run build
 FROM nginx:1.25.5-alpine-slim
 
 # Заполнение поля автора
-MAINTAINER "Augmentation team"
+LABEL Author="Augmentation team"
 
 # Здесь можно указать любую информацию, к примеру тип
 LABEL type="Frontend-vue-vite"
