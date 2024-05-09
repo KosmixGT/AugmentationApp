@@ -1,0 +1,30 @@
+version: '3.4'
+
+services:
+
+  backend:
+    image: gardunov/backend:v1
+    container_name: gardunov/backend-test:v1
+    ports:
+      - 7510:5000
+    command: "5000"
+    depends_on:
+      - database
+
+  frontend:
+    image: gardunov/client:v1
+    container_name: gardunov/client-test:v1
+    ports:
+      - 7509:80
+    depends_on:
+      - backend
+
+  database:
+    image: postgres:latest
+    container_name: postgesql-test
+    environment:
+      - 'POSTGRES_PASSWORD=myps'
+    volumes:
+      - '/prog/devops_aug/db/test-volumes:/var/lib/postgresql/data'
+    ports:
+      - 7511:5432
