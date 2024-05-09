@@ -1,3 +1,4 @@
+# Этапы
 stages:
   - build
   - test
@@ -11,16 +12,21 @@ stages:
 #     - if: $CI_MERGE_REQUEST_TARGET_BRANCH_NAME == 'developer'
 #       when: always
 
+# Сборка контейнеров
 build-job:
   stage: build
+  # Если работам с main или developer: то 
   rules:
     - if: $CI_COMMIT_BRANCH == 'main'
     - if: $CI_MERGE_REQUEST_TARGET_BRANCH_NAME == 'main'
+      when: always
+      variables:
+        DB_CONNECTION_STRING: $DB_CONNECTION
     - if: $CI_COMMIT_BRANCH == 'developer'
     - if: $CI_MERGE_REQUEST_TARGET_BRANCH_NAME == 'developer'
       when: always
       variables:
-        DB_CONNECTION_STRING: $DB_CONNECTION
+        DB_CONNECTION_STRING: $DB_CONNECTION_TEST
     - when: manual
       variables:
         DB_CONNECTION_STRING: $DB_CONNECTION_TEST
