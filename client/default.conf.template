@@ -1,0 +1,34 @@
+server {
+    listen   ${NGINX_PORT}; ## listen for ipv4;
+    server_name localhost;
+    
+    resolver 127.0.0.11 ipv6=off;
+    
+    #Установим root и точку входа, у нас index.html в папка dist
+    root /usr/share/nginx/html/dist/; 
+    index index.html;
+
+    # redirect server error pages to the static page /50x.html
+    #
+    error_page   500 502 503 504  /50x.html;
+    location = /50x.html {
+        root   /usr/share/nginx/html;
+    }
+
+    location / {
+        
+
+            #if (-f $request_filename) {
+            #    	expires max;
+            #    	break;
+            #}
+            #if ($request_filename !~ "\.(js|htc|ico|gif|jpg|png|css)$") {
+            #    	rewrite ^(.*) /index.html last;
+            #}
+            # это с другого сайта try_files $uri /index.html; # redirect all request to index.html
+    }
+
+    location ~ ^/api/(.*)$ {
+        proxy_pass   http://backend:5000/$1;
+    }
+}

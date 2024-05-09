@@ -1,0 +1,4 @@
+.gitignore
+.README
+public
+Dockerfile

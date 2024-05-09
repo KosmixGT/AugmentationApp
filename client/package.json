@@ -7,7 +7,7 @@
     "lint": "eslint . --ext .vue,.js,.jsx,.cjs,.mjs --fix --ignore-path .gitignore",
     "dev": "vite",
     "format": "prettier --write src/",
-    "preview": "vite preview"
+    "preview": "vite preview --host 0.0.0.0 --port"
   },
   "dependencies": {
     "@mdi/font": "5.9.55",
