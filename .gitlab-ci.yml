@@ -87,6 +87,7 @@ deploy-job:
         RUN_PATH: '/'
   
   script:
+    - ls
     - cd ${RUN_PATH}
     - ls
     - docker compose up -d
