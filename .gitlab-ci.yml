@@ -11,13 +11,13 @@ build-job:
   # Если работаем с main: то берём строку подключения из DB_CONNECTION
   rules:
     - if: $CI_COMMIT_BRANCH == 'main'
-    - if: $CI_MERGE_REQUEST_TARGET_BRANCH_NAME == 'main'
+    #- if: $CI_MERGE_REQUEST_TARGET_BRANCH_NAME == 'main'
       variables:
         DB_CONNECTION_STRING: $DB_CONNECTION
       when: always
 
     - if: $CI_COMMIT_BRANCH == 'developer'
-    - if: $CI_MERGE_REQUEST_TARGET_BRANCH_NAME == 'developer'
+    #- if: $CI_MERGE_REQUEST_TARGET_BRANCH_NAME == 'developer'
       variables:
         DB_CONNECTION_STRING: $DB_CONNECTION_TEST
       when: always
@@ -56,9 +56,9 @@ unit-test-job:
   # Запускаются по стандарту только для main и developer, в остальных ветках можно запустить вручную
   rules:
     - if: $CI_COMMIT_BRANCH == 'main'
-    - if: $CI_MERGE_REQUEST_TARGET_BRANCH_NAME == 'main'
+    #- if: $CI_MERGE_REQUEST_TARGET_BRANCH_NAME == 'main'
     - if: $CI_COMMIT_BRANCH == 'developer'
-    - if: $CI_MERGE_REQUEST_TARGET_BRANCH_NAME == 'developer'
+    #- if: $CI_MERGE_REQUEST_TARGET_BRANCH_NAME == 'developer'
       when: always
 
     - when: manual
@@ -80,7 +80,7 @@ security-test-job:
   # Выполняются только для релизной версии, можно выполнить самому, но они не обязаны работать при разработке
   rules:
     - if: $CI_COMMIT_BRANCH == 'main'
-    - if: $CI_MERGE_REQUEST_TARGET_BRANCH_NAME == 'main'
+    #- if: $CI_MERGE_REQUEST_TARGET_BRANCH_NAME == 'main'
       when: always
 
     - when: manual
@@ -97,7 +97,7 @@ deploy-job:
   rules:
     # Если запускается не на main, то выполняет развёртывание на тестовом сервере
     - if: $CI_COMMIT_BRANCH == 'main'
-    - if: $CI_MERGE_REQUEST_TARGET_BRANCH_NAME == 'main'
+    #- if: $CI_MERGE_REQUEST_TARGET_BRANCH_NAME == 'main'
       variables:
         RUN_PATH: '/'
       when: always
@@ -106,7 +106,7 @@ deploy-job:
         RUN_PATH: '/test'
 
     - if: $CI_COMMIT_BRANCH == 'developer'
-    - if: $CI_MERGE_REQUEST_TARGET_BRANCH_NAME == 'developer'
+    #- if: $CI_MERGE_REQUEST_TARGET_BRANCH_NAME == 'developer'
       when: always
     
     - when: manual
