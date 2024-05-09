@@ -81,9 +81,7 @@ deploy-job:
     - if: $CI_MERGE_REQUEST_TARGET_BRANCH_NAME == 'main'
       variables:
         RUN_PATH: '/test'
-    - if: $CI_COMMIT_BRANCH != 'main'
-    - if: $CI_MERGE_REQUEST_TARGET_BRANCH_NAME != 'main'
-      variables:
+    - variables:
         RUN_PATH: '/'
   
   script:
