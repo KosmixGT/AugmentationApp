@@ -24,10 +24,17 @@ export default {
         // Обработка успешной загрузки
         console.log('Пользователь найден:', response.data)
         return response.data.password
-      } catch (error) {
-        console.error('Пользователь не обнаружен:', error)
+      } catch(error)
+      {
+        if (error.response) {
+          console.log('Пользователь не обнаружен:', error.response);
+        } else if (error.request) {
+          console.log('Пользователь не обнаружен:', error.request);
+        } else {
+          console.log('Пользователь не обнаружен:', error.message);
+        }
         return -1
-      }
+      };
     },
     async loginClick() {
       var passwd = await this.getUser(this.login)

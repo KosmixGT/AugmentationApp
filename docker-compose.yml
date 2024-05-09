@@ -6,26 +6,26 @@ services:
     image: gardunov/backend:v1
     ports:
       - 7505:5000
-    command: uvicorn app.main:app --reload --host 0.0.0.0 --port 5000
+    command: "5000"
     depends_on:
       - database
 
   frontend:
     image: gardunov/client:v1
-    #environment:
-    #  - VUE_APP_BACKEND_URL=http://localhost:7505
     ports:
-      - 7506:5173
+      - 7506:80
+    depends_on:
+      - backend
 
-  # database:
-  #   image: postgres:latest
-  #   container_name: postgesql
-  #   environment:
-  #     - 'POSTGRES_PASSWORD=myps'
-  #   volumes:
-  #     - '/prog/devops_aug/db/volumes:/var/lib/postgresql/data'
-  #   ports:
-  #     - 7504:5432
+  database:
+    image: postgres:latest
+    container_name: postgesql
+    environment:
+      - 'POSTGRES_PASSWORD=myps'
+    volumes:
+      - '/prog/devops_aug/db/volumes:/var/lib/postgresql/data'
+    ports:
+      - 7504:5432
 
   prometheus:
     image: prom/prometheus
@@ -39,11 +39,14 @@ services:
 
   grafana:
     image: grafana/grafana
+    user: "472:472"
     container_name: grafana
     ports:
       - 7507:3000
+    #environment:
+    #- GF_PATHS_DATA=/var/lib/grafana
     volumes:
-      - grafana_data:/var/lib/grafana
+      - /prog/devops_aug/grafana/volume:/var/lib/grafana
 
 volumes:
   prometheus_data:
@@ -57,4 +60,4 @@ volumes:
     driver_opts:
       o: bind
       type: none
-      device: ./grafana_data
+      device: /prog/devops_aug/grafana/volume

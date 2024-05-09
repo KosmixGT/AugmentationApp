@@ -5,25 +5,27 @@
       <v-col cols="12">
         <h1 class="text-center">Добро пожаловать на сайт аугментации изображений!</h1>
         <div class="text-center">
-          <p class="headline">Улучшите ваши изображения с помощью наших инструментов аугментации:</p>
+          <p class="headline">Здесь вы можете провести агументацию по различным параметрам:</p>
           <!-- Список параметров аугментации -->
-          <v-list dense>
-            <v-list-item>
-              <v-list-item-title style="font-size: 25px;">Процент аугментации</v-list-item-title>
-              <v-list-item-title style="font-size: 25px;">Угол поворота</v-list-item-title>
-              <v-list-item-title style="font-size: 25px;">Шум</v-list-item-title>
-              <v-list-item-title style="font-size: 25px;">Контраст</v-list-item-title>
-              <v-list-item-title style="font-size: 25px;">Яркость</v-list-item-title>
-            </v-list-item>
-            <!-- Другие параметры -->
-          </v-list>
+          <div class="text-left centered">
+            <v-list dense>
+              <v-list-item>
+                <v-list-item-title style="font-size: 25px;">1. Процент аугментации</v-list-item-title>
+                <v-list-item-title style="font-size: 25px;">2. Угол поворота</v-list-item-title>
+                <v-list-item-title style="font-size: 25px;">3. Шум</v-list-item-title>
+                <v-list-item-title style="font-size: 25px;">4. Контраст</v-list-item-title>
+                <v-list-item-title style="font-size: 25px;">5. Яркость</v-list-item-title>
+              </v-list-item>
+              <!-- Другие параметры -->
+            </v-list>
+          </div>
         </div>
       </v-col>
     </v-row>
-    
+
     <!-- Пример аугментации -->
-    <h2 class="text-center mt-8">Пример аугментации</h2>
-    <img class="centered" style="width: 100%; transform: scale(0.8);" src="../assets/HomeAug1.jpg" />
+    <h2 class="text-center mt-12"  style="font-size: 26px;">Пример аугментации</h2>
+    <p class="text-center"><img style="width: 90%;" src="../assets/HomeAug1.jpg" /></p>
 
     <!-- Кнопки для входа и регистрации -->
     <v-row justify="center" class="mt-8">
