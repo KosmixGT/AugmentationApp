@@ -17,6 +17,12 @@ RUN npm run build
 # Образ для nginx с DockerHub
 FROM nginx:1.25.5-alpine-slim
 
+# Заполнение поля автора
+LABEL Author="Augmentation team"
+
+# Здесь можно указать любую информацию, к примеру тип
+LABEL type="Frontend-vue-vite"
+
 # Копируем сборку с предыдущего этапа на сервер
 # Здесь вообще должна быть публикация на AWS хостинг
 COPY --from=build-dist /app/dist /usr/share/nginx/html/dist
