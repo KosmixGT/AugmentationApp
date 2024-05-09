@@ -3,13 +3,13 @@ stages:
   - test
   - deploy
 
-workflow:
-  rules:
-    - if: $CI_COMMIT_BRANCH == 'main'
-    - if: $CI_MERGE_REQUEST_TARGET_BRANCH_NAME == 'main'
-    - if: $CI_COMMIT_BRANCH == 'developer'
-    - if: $CI_MERGE_REQUEST_TARGET_BRANCH_NAME == 'developer'
-      when: always
+# workflow:
+#   rules:
+#     - if: $CI_COMMIT_BRANCH == 'main'
+#     - if: $CI_MERGE_REQUEST_TARGET_BRANCH_NAME == 'main'
+#     - if: $CI_COMMIT_BRANCH == 'developer'
+#     - if: $CI_MERGE_REQUEST_TARGET_BRANCH_NAME == 'developer'
+#       when: always
 
 build-job:
   stage: build
@@ -24,6 +24,11 @@ build-job:
       #- docker push gardunov/client:v1
       #- docker push gardunov/backend:v1
   rules:
+    - if: $CI_COMMIT_BRANCH == 'main'
+    - if: $CI_MERGE_REQUEST_TARGET_BRANCH_NAME == 'main'
+    - if: $CI_COMMIT_BRANCH == 'developer'
+    - if: $CI_MERGE_REQUEST_TARGET_BRANCH_NAME == 'developer'
+      when: always
     - when: manual
 
   tags:
@@ -38,6 +43,11 @@ unit-test-job:
   tags:
     - test
   rules:
+    - if: $CI_COMMIT_BRANCH == 'main'
+    - if: $CI_MERGE_REQUEST_TARGET_BRANCH_NAME == 'main'
+    - if: $CI_COMMIT_BRANCH == 'developer'
+    - if: $CI_MERGE_REQUEST_TARGET_BRANCH_NAME == 'developer'
+      when: always
     - when: manual
   needs:
     - job: build-job
@@ -62,6 +72,11 @@ security-test-job:
 deploy-job:
   stage: deploy
   rules:
+    - if: $CI_COMMIT_BRANCH == 'main'
+    - if: $CI_MERGE_REQUEST_TARGET_BRANCH_NAME == 'main'
+    - if: $CI_COMMIT_BRANCH == 'developer'
+    - if: $CI_MERGE_REQUEST_TARGET_BRANCH_NAME == 'developer'
+      when: always
     - if: $CI_COMMIT_BRANCH == 'main'
     - if: $CI_MERGE_REQUEST_TARGET_BRANCH_NAME == 'main'
       variables:
