@@ -1,15 +1,26 @@
+# Указываем версию
 version: '3.4'
 
+# Указываем список контейнеров
 services:
 
+  # Бекенд приложения на FastAPI
   backend:
+    # Указываем образ
     image: gardunov/backend:v1
+
+    # Прокидываем внутрь контейнера порт 7505, на порт 5000
     ports:
       - 7505:5000
+
+    # Указываем серверу слушать порт 5000
     command: "5000"
+
+    # Ждём, пока запуститься база данных
     depends_on:
       - database
 
+  # Фронтенд на Vue + Nginx
   frontend:
     image: gardunov/client:v1
     ports:
@@ -17,16 +28,25 @@ services:
     depends_on:
       - backend
 
+  # База данных
   database:
     image: postgres:latest
+
+    # Указываем имя контейнера
     container_name: postgesql
+
+    # Задаём пароль для БД в перемнных окружения
     environment:
       - 'POSTGRES_PASSWORD=myps'
+
+    # Монтируем каталог ..db/volumes внутрь контейнера в папку postgresql/data
     volumes:
       - '/prog/devops_aug/db/volumes:/var/lib/postgresql/data'
+
     ports:
       - 7504:5432
 
+  # Поднимает базу данных для монтиторинга
   prometheus:
     image: prom/prometheus
     container_name: prometheus
@@ -37,6 +57,7 @@ services:
     command:
       - '--config.file=/etc/prometheus/prometheus.yml'
 
+  # Поднимаем API для мониторинга
   grafana:
     image: grafana/grafana
     user: "472:472"
@@ -48,6 +69,7 @@ services:
     volumes:
       - /prog/devops_aug/grafana/volume:/var/lib/grafana
 
+# Задаём параметры монтирования
 volumes:
   prometheus_data:
     driver: local
