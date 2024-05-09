@@ -12,15 +12,15 @@ build-job:
   rules:
     - if: $CI_COMMIT_BRANCH == 'main'
     - if: $CI_MERGE_REQUEST_TARGET_BRANCH_NAME == 'main'
-      when: always
       variables:
         DB_CONNECTION_STRING: $DB_CONNECTION
+      when: always
 
     - if: $CI_COMMIT_BRANCH == 'developer'
     - if: $CI_MERGE_REQUEST_TARGET_BRANCH_NAME == 'developer'
-      when: always
       variables:
         DB_CONNECTION_STRING: $DB_CONNECTION_TEST
+      when: always
 
     - when: manual
       variables:
@@ -95,22 +95,21 @@ deploy-job:
 
   # По базе запускается только для main и developer
   rules:
-    - if: $CI_COMMIT_BRANCH == 'main'
-    - if: $CI_MERGE_REQUEST_TARGET_BRANCH_NAME == 'main'
-    - if: $CI_COMMIT_BRANCH == 'developer'
-    - if: $CI_MERGE_REQUEST_TARGET_BRANCH_NAME == 'developer'
-      when: always
-    
-    - when: manual
-
     # Если запускается не на main, то выполняет развёртывание на тестовом сервере
     - if: $CI_COMMIT_BRANCH == 'main'
     - if: $CI_MERGE_REQUEST_TARGET_BRANCH_NAME == 'main'
       variables:
         RUN_PATH: '/'
+      when: always
 
     - variables:
         RUN_PATH: '/test'
+
+    - if: $CI_COMMIT_BRANCH == 'developer'
+    - if: $CI_MERGE_REQUEST_TARGET_BRANCH_NAME == 'developer'
+      when: always
+    
+    - when: manual
   
   script:
     - cd ".$RUN_PATH"
