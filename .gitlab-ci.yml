@@ -28,6 +28,7 @@ build-job:
   
   # Собираем контейнеры
   script:
+      - echo $DB_CONNECTION_STRING
       - cd server
       - docker build -t gardunov/backend:v1 --build-arg DB_CONNECTION=$DB_CONNECTION_STRING .
       - cd ../client
