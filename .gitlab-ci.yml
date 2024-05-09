@@ -88,6 +88,8 @@ deploy-job:
   
   script:
     - ls
+    - echo "some"
+    - echo $RUN_PATH
     - echo ${RUN_PATH}
     - cd ${RUN_PATH}
     - ls
