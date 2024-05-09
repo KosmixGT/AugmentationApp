@@ -1,17 +1,38 @@
-# For more information, please refer to https://aka.ms/vscode-docker-python
+# Уменьшенная версия Debian для Python
 FROM python:3.12-slim
 
-# Install system dependencies
-RUN apt-get update && apt-get install -y libpq-dev && apt-get install -y libgl1-mesa-glx && apt-get install -y libglib2.0-0
+# Заполнение поля автора
+LABEL Author="Augmentation team"
 
-RUN mkdir app
-WORKDIR /
+# Здесь можно указать любую информацию, к примеру тип
+LABEL type="Backend-fast-api"
 
-ENV PATH="${PATH}:/root/.local/bin"
-ENV PYTHONPATH=.
+# Обновление пакетов и установка библиотек для OpenCV
+RUN apt-get update && apt-get install --no-install-recommends -y libgl1-mesa-glx libglib2.0-0
 
-COPY ./requirements.txt .
+# Задаём название рабочей директории
+WORKDIR /program/app
+
+# Копируем файл с зависимостями в program
+COPY ./requirements.txt ..
+
+# Обновляем пакетный менеджер и устанавливаем все зависимости
 RUN pip install --upgrade pip
-RUN pip install -r requirements.txt
+RUN pip install -r ../requirements.txt
 
-COPY . .
+# Копируем наше приложение в program/app
+COPY ./app .
+
+# Задаём строку подключения к БД из переменных GitLab
+ARG DB_CONNECTION
+ENV DB_CONNECTION=$DB_CONNECTION
+
+# Обозначаем для пользователя порт, который прослушивается приложением
+EXPOSE 5000
+
+# Задаём базовую команду
+ENTRYPOINT ["uvicorn", "main:app", "--host", "0.0.0.0", "--port"]
+
+# Задаём передаваемые агрументы
+CMD ["5000"]
+

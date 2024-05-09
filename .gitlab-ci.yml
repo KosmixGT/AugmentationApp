@@ -1,44 +1,123 @@
+# Этапы
 stages:
   - build
   - test
   - deploy
 
-workflow:
-  rules:
-    - if: $CI_COMMIT_BRANCH == 'main'
-      when: always
-
-variables:
-  DEPLOY_ENV: "production"
-
+# Сборка контейнеров для сервера и клиента
 build-job:
   stage: build
+
+  # Если работаем с main: то берём строку подключения из DB_CONNECTION
+  rules:
+    - if: $CI_COMMIT_BRANCH == 'main'
+    - if: $CI_MERGE_REQUEST_TARGET_BRANCH_NAME == 'main'
+      when: always
+      variables:
+        DB_CONNECTION_STRING: $DB_CONNECTION
+
+    - if: $CI_COMMIT_BRANCH == 'developer'
+    - if: $CI_MERGE_REQUEST_TARGET_BRANCH_NAME == 'developer'
+      when: always
+      variables:
+        DB_CONNECTION_STRING: $DB_CONNECTION_TEST
+
+    - when: manual
+      variables:
+        DB_CONNECTION_STRING: $DB_CONNECTION_TEST
+  
+  # Собираем контейнеры
   script:
-      - docker login -u gardunov -p $DOCKER_HUB_PASSWORD
       - cd server
-      - docker build -t gardunov/backend:v1 .
-      - docker push gardunov/backend:v1
+      - docker build -t gardunov/backend:v1 --build-arg DB_CONNECTION=$DB_CONNECTION_STRING .
       - cd ../client
       - docker build -t gardunov/client:v1 .
-      - docker push gardunov/client:v1
-
+      
+      # Пушим контейнеры на dockerhub
+      #- docker login -u gardunov -p $DOCKER_HUB_PASSWORD
+      #- docker push gardunov/client:v1
+      #- docker push gardunov/backend:v1
+  
+  # Указываем тег для раннера
   tags:
     - build
 
+# Интеграционные тн=есты
 unit-test-job:
   stage: test
   script:
     - echo "Running unit tests."
-    - sleep 5
+    - sleep 3
     - echo "Unit tests complete."
   tags:
     - test
 
+  # Запускаются по стандарту только для main и developer, в остальных ветках можно запустить вручную
+  rules:
+    - if: $CI_COMMIT_BRANCH == 'main'
+    - if: $CI_MERGE_REQUEST_TARGET_BRANCH_NAME == 'main'
+    - if: $CI_COMMIT_BRANCH == 'developer'
+    - if: $CI_MERGE_REQUEST_TARGET_BRANCH_NAME == 'developer'
+      when: always
+
+    - when: manual
+
+  # Необходимо выполнение сборки
+  needs:
+    - job: build-job
+
+# Тесты безопасности
+security-test-job:
+  stage: test
+  script:
+    - echo "Running security tests."
+    - sleep 3
+    - echo "security tests complete."
+  tags:
+    - test
+
+  # Выполняются только для релизной версии, можно выполнить самому, но они не обязаны работать при разработке
+  rules:
+    - if: $CI_COMMIT_BRANCH == 'main'
+    - if: $CI_MERGE_REQUEST_TARGET_BRANCH_NAME == 'main'
+      when: always
+
+    - when: manual
+      allow_failure: true
+
+  needs:
+    - job: build-job
+
+# Развёртывание на сервере
 deploy-job:
   stage: deploy
+
+  # По базе запускается только для main и developer
+  rules:
+    - if: $CI_COMMIT_BRANCH == 'main'
+    - if: $CI_MERGE_REQUEST_TARGET_BRANCH_NAME == 'main'
+    - if: $CI_COMMIT_BRANCH == 'developer'
+    - if: $CI_MERGE_REQUEST_TARGET_BRANCH_NAME == 'developer'
+      when: always
+    
+    - when: manual
+
+    # Если запускается не на main, то выполняет развёртывание на тестовом сервере
+    - if: $CI_COMMIT_BRANCH == 'main'
+    - if: $CI_MERGE_REQUEST_TARGET_BRANCH_NAME == 'main'
+      variables:
+        RUN_PATH: '/'
+
+    - variables:
+        RUN_PATH: '/test'
+  
   script:
-  #  - docker compose restart
+    - cd ".$RUN_PATH"
     - docker compose up -d
     - docker compose logs
+
   tags:
     - deploy
+
+  needs:
+    - job: build-job

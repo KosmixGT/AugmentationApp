@@ -1,31 +1,17 @@
 <template>
   <v-container>
-    <div class="centered" style="margin-top: 15%">
-      <div style="font-size: 24px">
-        <h2 style="margin-bottom: 15px">Вход</h2>
-        <strong><p>Логин:</p></strong>
-        <input
-          style="margin-top: 5px; border: 1px solid; text-indent: 7px"
-          v-model="login"
-          placeholder="Введите логин"
-        />
-        <p style="margin-top: 10px"></p>
-        <strong><p>Пароль:</p></strong>
-        <input
-          style="margin-top: 5px; border: 1px solid; text-indent: 7px"
-          v-model="password"
-          placeholder="Введите пароль"
-        />
-        <p style="margin-top: 15px"></p>
-        <button
-          v-on:click="loginClick"
-          style="margin-top: 15px; border: 1px solid; background-color: aqua; width: 40%"
-        >
-          Вход
-        </button>
-        <br />
-      </div>
-    </div>
+    <v-row justify="center" class="mt-15">
+      <v-col cols="12" sm="8" md="6" lg="4">
+        <v-card class="pa-5">
+          <h2 class="text-center mb-4">Вход</h2>
+          <v-form>
+            <v-text-field v-model="login" label="Логин" outlined></v-text-field>
+            <v-text-field v-model="password" label="Пароль" type="password" outlined></v-text-field>
+            <v-btn @click="loginClick" color="primary" class="mt-4" block>Вход</v-btn>
+          </v-form>
+        </v-card>
+      </v-col>
+    </v-row>
   </v-container>
 </template>
 
@@ -38,10 +24,17 @@ export default {
         // Обработка успешной загрузки
         console.log('Пользователь найден:', response.data)
         return response.data.password
-      } catch (error) {
-        console.error('Пользователь не обнаружен:', error)
+      } catch(error)
+      {
+        if (error.response) {
+          console.log('Пользователь не обнаружен:', error.response);
+        } else if (error.request) {
+          console.log('Пользователь не обнаружен:', error.request);
+        } else {
+          console.log('Пользователь не обнаружен:', error.message);
+        }
         return -1
-      }
+      };
     },
     async loginClick() {
       var passwd = await this.getUser(this.login)
@@ -69,4 +62,7 @@ export default {
   justify-content: center;
   align-items: center;
 }
+.mt-15 {
+    margin-top: 15%;
+  }
 </style>
