@@ -4,7 +4,7 @@ services:
 
   backend:
     image: gardunov/backend:v1
-    container_name: gardunov/backendTest:v1
+    container_name: backendTest1
     ports:
       - 7510:5000
     command: "5000"
@@ -13,7 +13,7 @@ services:
 
   frontend:
     image: gardunov/client:v1
-    container_name: gardunov/clientTest:v1
+    container_name: clientTest1
     ports:
       - 7509:80
     depends_on:
@@ -21,7 +21,7 @@ services:
 
   database:
     image: postgres:latest
-    container_name: postgesqlTest
+    container_name: postgesqlTest1
     environment:
       - 'POSTGRES_PASSWORD=myps'
     volumes:
