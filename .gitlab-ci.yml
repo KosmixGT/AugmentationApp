@@ -85,7 +85,7 @@ deploy-job:
         RUN_PATH: '/test'
   
   script:
-    - cd "..'$RUN_PATH'"
+    - cd "..$RUN_PATH"
     - docker compose up -d
     - docker compose logs
   tags:
